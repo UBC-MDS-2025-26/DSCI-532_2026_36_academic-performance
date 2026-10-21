@@ -30,7 +30,7 @@ involvement_order = ["Low", "Medium", "High"]
 SCHOOL_TYPE_CHOICES = ["Public", "Private"]
 PARENT_EDU_CHOICES = ["High School", "College", "Postgraduate"]
 
-chat = clt.ChatGithub(model="gpt-4o")
+chat = clt.ChatGoogle()
 qc = QueryChat(
     t.execute(), 
     "performance_data",
