@@ -45,20 +45,24 @@ def json_safe_errors(func):
 class GeminiQueryChat(QueryChat):
     """QueryChat whose tools work with Gemini.
 
-    Gemini calls querychat's tools without the "querychat_" prefix
-    (update_dashboard, not querychat_update_dashboard), which chatlas rejects
-    as "Unknown tool", so every tool is also registered under its short name.
-    chatlas also can't send exception objects back to Gemini (not JSON
-    serializable), so tool errors are turned into text.
+    Gemini ignores the "querychat_" prefix on querychat's tool names: it calls
+    update_dashboard, not querychat_update_dashboard, which chatlas rejects as
+    "Unknown tool", and it refuses a prefixed and an unprefixed declaration
+    together ("Duplicate function declaration"). So each tool is registered
+    under its short name only. chatlas also can't send exception objects back
+    to Gemini (not JSON serializable), so tool errors are turned into text.
     """
 
     def client(self, **kwargs):
         chat = super().client(**kwargs)
-        for tool in chat.get_tools():
-            func = json_safe_errors(tool.func)
-            short_name = tool.name.removeprefix("querychat_")
-            for name in {tool.name, short_name}:
-                chat.register_tool(func, name=name, annotations=tool.annotations, force=True)
+        chat.set_tools([
+            clt.Tool.from_func(
+                json_safe_errors(tool.func),
+                name=tool.name.removeprefix("querychat_"),
+                annotations=tool.annotations,
+            )
+            for tool in chat.get_tools()
+        ])
         return chat
 
 
