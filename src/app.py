@@ -30,7 +30,7 @@ involvement_order = ["Low", "Medium", "High"]
 SCHOOL_TYPE_CHOICES = ["Public", "Private"]
 PARENT_EDU_CHOICES = ["High School", "College", "Postgraduate"]
 
-chat = clt.ChatGoogle(model="gemini-3.8-flash")
+chat = clt.ChatGoogle(model="gemini-3.5-flash-lite")
 qc = QueryChat(
     t.execute(), 
     "performance_data",
