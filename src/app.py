@@ -66,7 +66,7 @@ class GeminiQueryChat(QueryChat):
         return chat
 
 
-chat = clt.ChatGoogle(model="gemini-3.6-flash")
+chat = clt.ChatGoogle(model="gemini-3.5-flash-lite")
 qc = GeminiQueryChat(
     t.execute(), 
     "performance_data",
